@@ -54,3 +54,24 @@ const values1 = readFileSync("data/2.txt", "utf8")
 
 console.log("Part1:", values1);
 
+const values2 = readFileSync("data/2.txt", "utf8")
+  .split("\n")
+  .filter((v) => v.length)
+  .map(parseGames)
+  .map((g) =>
+    g.reduce(
+      (acc: Game, game: Game) => {
+        acc.blue = Math.max(acc.blue, game.blue);
+        acc.green = Math.max(acc.green, game.green);
+        acc.red = Math.max(acc.red, game.red);
+        acc.id = game.id;
+        return acc;
+      },
+      { id: 0, blue: 0, green: 0, red: 0 }
+    )
+  )
+  .map((g) => g.blue * g.green * g.red)
+  .reduce((acc, prod) => acc + prod, 0);
+
+console.log("Part2:", values2);
+

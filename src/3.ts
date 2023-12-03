@@ -2,21 +2,18 @@ import { readFileSync } from "fs";
 
 // https://adventofcode.com/2023/day/3
 
-
 const data1 = readFileSync("data/3.txt", "utf8")
   .split("\n")
-  .filter((v) => v.length)
-;
-
+  .filter((v) => v.length);
 interface Num {
-    ix: number;
-    len: number;
-    value: number;
+  ix: number;
+  len: number;
+  value: number;
 }
 
 interface Symbol {
-    ix: number;
-    sym: string;
+  ix: number;
+  sym: string;
 }
 
 const isDigit = (char: string) => char >= "0" && char <= "9";
@@ -26,7 +23,7 @@ const parseSymbols = (line: string) => {
   const isSymbol = (char: string) => char != "." && !isDigit(char);
   for (var ix = 0; ix < line.length; ix++) {
     if (isSymbol(line[ix])) {
-      result.push({ix, sym: line[ix]});
+      result.push({ ix, sym: line[ix] });
     }
   }
   return result;
@@ -58,7 +55,7 @@ const parseNumbers = (line: string) => {
       value = value * 10 + +line[ix];
     } else {
       if (len > 0) {
-        result.push({ ix: ix-len, len, value });
+        result.push({ ix: ix - len, len, value });
       }
       len = 0;
       value = 0;
@@ -72,10 +69,38 @@ const parseNumbers = (line: string) => {
 };
 
 const numbers = data1
-    .map(parseNumbers)
-    .map((nums, row) => nums.filter(num => isAdjacentToSymbol(num, row)))
-    .flat()
-    .map(num => num.value)
-    .reduce((acc, value) => acc + value, 0);
+  .map(parseNumbers)
+  .map((nums, row) => nums.filter((num) => isAdjacentToSymbol(num, row)));
+const result1 = numbers
+  .flat()
+  .map((num) => num.value)
+  .reduce((acc, value) => acc + value, 0);
 
-console.log('Part 1', numbers);
+console.log("Part 1", result1);
+
+let result2 = Array.from(symbolMap, ([row, syms]) => {
+  var res: Num[][] = [];
+  var candidates = [...numbers[row]];
+  if (row > 0) {
+    candidates.push(...numbers[row - 1]);
+  }
+  if (row < numbers.length - 1) {
+    candidates.push(...numbers[row + 1]);
+  }
+  for (const sym of syms) {
+    if (sym.sym == "*") {
+      const connected = candidates.filter(
+        (c) => sym.ix <= c.ix + c.len  && sym.ix >= c.ix - 1
+      );
+      if (connected.length == 2) {
+        // console.log("connected", row, connected);
+        res.push(connected);
+      }
+    }
+  }
+  return res;
+}).flat().filter(ns => ns.length == 2)
+.map(ns => ns[0].value * ns[1].value)
+.reduce((acc, ns) => acc + ns, 0);
+
+console.log("res", result2);

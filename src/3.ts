@@ -12,16 +12,21 @@ interface Num {
     ix: number;
     len: number;
     value: number;
-};
+}
+
+interface Symbol {
+    ix: number;
+    sym: string;
+}
 
 const isDigit = (char: string) => char >= "0" && char <= "9";
 
 const parseSymbols = (line: string) => {
-  const result: number[] = [];
+  const result: Symbol[] = [];
   const isSymbol = (char: string) => char != "." && !isDigit(char);
   for (var ix = 0; ix < line.length; ix++) {
     if (isSymbol(line[ix])) {
-      result.push(ix);
+      result.push({ix, sym: line[ix]});
     }
   }
   return result;
@@ -33,9 +38,9 @@ const isAdjacentToSymbol = (num: Num, row: number) => {
   const sr = Math.max(0, row - 1);
   const lr = Math.min(data1.length - 1, row + 1);
   for (var r = sr; r <= lr; r++) {
-    const ixs = symbolMap.get(r) || [];
-    for (const ix of ixs) {
-      if (ix >= num.ix - 1 && ix <= num.ix + num.len) {
+    const syms = symbolMap.get(r) || [];
+    for (const sym of syms) {
+      if (sym.ix >= num.ix - 1 && sym.ix <= num.ix + num.len) {
         return true;
       }
     }

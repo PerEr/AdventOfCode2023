@@ -38,7 +38,7 @@ const parseGames = (value: string) => {
     return p[1].split(';').map(str => parseGame(gameId, str));
 };
 
-const values1 = readFileSync("data/2.txt", "utf8")
+const data = readFileSync("data/2.txt", "utf8")
   .split("\n")
   .filter((v) => v.length)
   .map(parseGames)
@@ -48,28 +48,15 @@ const values1 = readFileSync("data/2.txt", "utf8")
     acc.red = Math.max(acc.red, game.red);
     acc.id = game.id;
     return acc;
-  }, { id: 0, blue: 0, green: 0, red: 0 }))
+  }, { id: 0, blue: 0, green: 0, red: 0 }));
+
+const values1 = data
   .filter(g => g.red <= 12 && g.green <= 13 && g.blue <= 14)
   .reduce((acc, game) => acc + game.id, 0);
 
 console.log("Part1:", values1);
 
-const values2 = readFileSync("data/2.txt", "utf8")
-  .split("\n")
-  .filter((v) => v.length)
-  .map(parseGames)
-  .map((g) =>
-    g.reduce(
-      (acc: Game, game: Game) => {
-        acc.blue = Math.max(acc.blue, game.blue);
-        acc.green = Math.max(acc.green, game.green);
-        acc.red = Math.max(acc.red, game.red);
-        acc.id = game.id;
-        return acc;
-      },
-      { id: 0, blue: 0, green: 0, red: 0 }
-    )
-  )
+const values2 = data
   .map((g) => g.blue * g.green * g.red)
   .reduce((acc, prod) => acc + prod, 0);
 

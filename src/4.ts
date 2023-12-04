@@ -4,8 +4,7 @@ import { readFileSync } from "fs";
 
 interface Card {
   id: number;
-  winning: number[];
-  actual: number[];
+  wins: number;
 }
 const parseCard = (line: string): Card => {
     const p = line.split(":");
@@ -16,16 +15,17 @@ const parseCard = (line: string): Card => {
         .match(/\b(\w+)\b/g)
         ?.map((s) => +s.trim())
     );
-    return { id, winning: numbers[0] || [], actual: numbers[1] || [] };
+    
+    const wins = numbers[0]?.filter(val => numbers[1]?.includes(val))?.length || 0
+    return { id, wins};
 }
 
 const values1 = readFileSync("data/4.txt", "utf8")
   .split("\n")
   .filter((v) => v.length)
   .map(parseCard)
-  .map((card: Card) => card.winning.filter(val => card.actual.includes(val)))
-  .filter(nums => nums.length > 0)
-  .map(nums => 2**(nums.length-1))
+  .filter(card => card.wins > 0)
+  .map(card => 2**(card.wins-1))
   .reduce((acc, val) => acc + val, 0);
 
 

@@ -4,9 +4,11 @@ import { readFileSync } from "fs";
 
 const isDigit = (char: string) => char >= '0' && char <= '9';
 
-const values1 = readFileSync("data/1.txt", "utf8")
-  .split('\n')
-  .filter((v) => v.length)
+const lines = readFileSync("data/1.txt", "utf8")
+  .split("\n")
+  .filter((v) => v.length);
+
+const values1 = lines
   .map(s => s.split(''))
   .map(cl => cl.filter(c => isDigit(c)))
   .map(cl => +(cl[0] + cl[cl.length - 1]))
@@ -46,11 +48,9 @@ function parseNumbers(value: string): number[] {
     return result;
 }
 
-const values2 = readFileSync("data/1.txt", "utf8")
-  .split("\n")
-  .filter((v) => v.length)
+const values2 = lines
   .map(parseNumbers)
-  .map((cl) => cl[0]*10 + cl[cl.length - 1])
+  .map((cl) => cl[0] * 10 + cl[cl.length - 1])
   .reduce((acc, value) => acc + value, 0);
 
 console.log("Part2:", values2);

@@ -54,3 +54,33 @@ t.forEach(([seed, soil]) => {
 */
 const value1 = seeds1.map(getLocation).reduce((acc, val) => Math.min(acc,val), Number.MAX_VALUE);
 console.log("Part1:", value1);
+
+function* rangeIterator(start: number, length: number): Iterable<number> {
+  let current = start;
+  for (let i = 0; i < length; i++) {
+    yield current;
+    current++;
+  }
+}
+
+const groupPairWise = (arr: number[]) => {
+    const result: number[][] = [];
+    for (var ix = 0; ix < arr.length; ix += 2) {
+        result.push([arr[ix], arr[ix+1]]);
+    }
+    return result;
+}
+const seeds2 = groupPairWise(seeds1);
+
+const res = seeds2.map(([start, len]) => {
+    var minLoc = Number.MAX_VALUE;
+    for (var seed of rangeIterator(start, len)) {
+        if (seed % 1000000 === 0) {
+            console.log(seed);
+        }
+        minLoc = Math.min(minLoc, getLocation(seed));
+    };
+    return minLoc;
+});
+
+console.log("Part 2", res.reduce((acc, val) => Math.min(acc,val), Number.MAX_VALUE));

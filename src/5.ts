@@ -74,13 +74,16 @@ const seeds2 = groupPairWise(seeds1);
 
 const res = seeds2.map(([start, len]) => {
     var minLoc = Number.MAX_VALUE;
+    // console.log('Processing seeds', start, len);
     for (var seed of rangeIterator(start, len)) {
         if (seed % 1000000 === 0) {
-            console.log(seed);
+            console.log(start, seed, start + len - seed, minLoc);
         }
         minLoc = Math.min(minLoc, getLocation(seed));
     };
     return minLoc;
 });
 
-console.log("Part 2", res.reduce((acc, val) => Math.min(acc,val), Number.MAX_VALUE));
+console.log("Part 2", res);
+
+console.log("Part2", res.reduce((acc, val) => Math.min(acc,val), Number.MAX_VALUE));

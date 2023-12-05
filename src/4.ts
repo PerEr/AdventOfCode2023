@@ -30,7 +30,6 @@ const values1 = data
 
 console.log("Part1:", values1);
 
-// Create a map from id to wins from a list of cards
 const cardMap = new Map<number, number>(data.map(card => [card.id, card.wins]));
 
 const countCards = (ix: number, res: Map<number, number>) => {

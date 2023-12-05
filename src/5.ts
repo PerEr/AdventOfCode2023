@@ -45,23 +45,9 @@ const getLocation = (seed: number): number => {
     const location = lookupValue(metaMap.get('humidity-to-location') || [], humidity);
     return location;
 };
-/*
-const t = [[0,0], [1,1], [48,48], [49,49],[50,52],[51,53],[96,98],[97,99],[98,50],[99,51]]];
-t.forEach(([seed, soil]) => {
-    const value = lookupValue(metaMap.get('seed-to-soil') || [], seed);;
-    console.log(seed, soil, value, value === soil ? "OK" : "FAIL");
-});
-*/
+
 const value1 = seeds1.map(getLocation).reduce((acc, val) => Math.min(acc,val), Number.MAX_VALUE);
 console.log("Part1:", value1);
-
-function* rangeIterator(start: number, length: number): Iterable<number> {
-  let current = start;
-  for (let i = 0; i < length; i++) {
-    yield current;
-    current++;
-  }
-}
 
 const groupPairWise = (arr: number[]) => {
     const result: number[][] = [];
@@ -73,17 +59,18 @@ const groupPairWise = (arr: number[]) => {
 const seeds2 = groupPairWise(seeds1);
 
 const res = seeds2.map(([start, len]) => {
-    var minLoc = Number.MAX_VALUE;
-    // console.log('Processing seeds', start, len);
-    for (var seed of rangeIterator(start, len)) {
-        if (seed % 1000000 === 0) {
-            console.log(start, seed, start + len - seed, minLoc);
+    function* rangeIterator(start: number, length: number): Iterable<number> {
+        let current = start;
+        for (let i = 0; i < length; i++) {
+            yield current;
+            current++;
         }
+    }
+    var minLoc = Number.MAX_VALUE;
+    for (var seed of rangeIterator(start, len)) {
         minLoc = Math.min(minLoc, getLocation(seed));
     };
     return minLoc;
 });
-
-console.log("Part 2", res);
 
 console.log("Part2", res.reduce((acc, val) => Math.min(acc,val), Number.MAX_VALUE));

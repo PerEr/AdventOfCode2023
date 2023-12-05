@@ -93,7 +93,6 @@ let result2 = Array.from(symbolMap, ([row, syms]) => {
         (c) => sym.ix <= c.ix + c.len  && sym.ix >= c.ix - 1
       );
       if (connected.length == 2) {
-        // console.log("connected", row, connected);
         res.push(connected);
       }
     }

@@ -38,7 +38,6 @@ function parseNumbers(value: string): number[] {
             result.push(+value[ix]);
         } else {
             const rest = value.substring(ix);
-            // Check if the string matches an en try in numbers
             const match = numbers.find((n) => rest.startsWith(n[0]));
             if (match) {
                 result.push(match[1]);

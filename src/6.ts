@@ -7,7 +7,7 @@ interface Race {
     distance: number;
 }
 
-const races = ((): Race[] => {
+const races1 = ((): Race[] => {
     const [timestr, diststr] = loadProblem("6.txt");
     const parseNumbers = (value: string): number[] => { 
         return value.split(':')[1].trim().match(/\b(\w+)\b/g)?.map((s) => +s.trim()) || [];
@@ -31,4 +31,17 @@ const countWaysToWin = (r: Race) => {
     return wins;
 };
 
-console.log('Part1:', races.map(countWaysToWin).reduce((acc, val) => acc * val, 1));
+console.log('Part1:', races1.map(countWaysToWin).reduce((acc, val) => acc * val, 1));
+
+const race2 = ((): Race => {
+    const [timestr, diststr] = loadProblem("6.txt");
+    const parseNumber = (value: string): number => { 
+        return +value.split(':')[1].split(' ').join('') || 0;
+    }
+    const time = parseNumber(timestr);
+    const distance = parseNumber(diststr);
+    
+    return {time, distance};
+})();
+
+console.log('Part2:', countWaysToWin(race2));

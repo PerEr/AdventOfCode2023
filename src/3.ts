@@ -1,10 +1,8 @@
-import { readFileSync } from "fs";
+import { isDigit, loadProblem } from "./utils";
 
 // https://adventofcode.com/2023/day/3
 
-const data1 = readFileSync("data/3.txt", "utf8")
-  .split("\n")
-  .filter((v) => v.length);
+const data1 = loadProblem("3.txt");
 interface Num {
   ix: number;
   len: number;
@@ -15,8 +13,6 @@ interface Symbol {
   ix: number;
   sym: string;
 }
-
-const isDigit = (char: string) => char >= "0" && char <= "9";
 
 const parseSymbols = (line: string) => {
   const result: Symbol[] = [];

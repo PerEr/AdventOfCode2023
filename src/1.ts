@@ -1,12 +1,8 @@
-import { readFileSync } from "fs";
+import { isDigit, loadProblem } from "./utils";
 
 // https://adventofcode.com/2023/day/1
 
-const isDigit = (char: string) => char >= '0' && char <= '9';
-
-const lines = readFileSync("data/1.txt", "utf8")
-  .split("\n")
-  .filter((v) => v.length);
+const lines = loadProblem("1.txt");
 
 const values1 = lines
   .map(s => s.split(''))

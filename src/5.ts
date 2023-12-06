@@ -1,4 +1,4 @@
-import { readFileSync } from "fs";
+import { rangeIterator, loadProblem } from "./utils";
 
 // https://adventofcode.com/2023/day/5
 
@@ -21,9 +21,7 @@ const toMap = (value: string) => {
     return { name, ranges };
 };
 
-const data = readFileSync("data/5.txt", "utf8")
-  .split("\n\n")
-  .filter((v) => v.length);
+const data = loadProblem("5.txt", "\n\n");
 const seeds1 = data[0].split(':')[1].trim().split(' ').map(v => +v);
 const metaMap = new Map(data.splice(1).map(toMap).map(o => [o.name, o.ranges]));
 
@@ -59,13 +57,6 @@ const groupPairWise = (arr: number[]) => {
 const seeds2 = groupPairWise(seeds1);
 
 const res = seeds2.map(([start, len]) => {
-    function* rangeIterator(start: number, length: number): Iterable<number> {
-        let current = start;
-        for (let i = 0; i < length; i++) {
-            yield current;
-            current++;
-        }
-    }
     var minLoc = Number.MAX_VALUE;
     for (var seed of rangeIterator(start, len)) {
         minLoc = Math.min(minLoc, getLocation(seed));

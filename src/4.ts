@@ -1,4 +1,4 @@
-import { readFileSync } from "fs";
+import { loadProblem } from "./utils";
 
 // https://adventofcode.com/2023/day/4
 
@@ -18,10 +18,7 @@ const parseCard = (line: string): Card => {
     return { id, wins};
 }
 
-const data = readFileSync("data/4.txt", "utf8")
-  .split("\n")
-  .filter((v) => v.length)
-  .map(parseCard);
+const data = loadProblem("4.txt").map(parseCard);
 
 const values1 = data
   .filter(card => card.wins > 0)

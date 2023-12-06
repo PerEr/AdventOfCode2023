@@ -1,4 +1,4 @@
-import { readFileSync } from "fs";
+import { loadProblem } from "./utils";
 
 // https://adventofcode.com/2023/day/2
 
@@ -38,9 +38,7 @@ const parseGames = (value: string) => {
     return p[1].split(';').map(str => parseGame(gameId, str));
 };
 
-const data = readFileSync("data/2.txt", "utf8")
-  .split("\n")
-  .filter((v) => v.length)
+const data = loadProblem("2.txt")
   .map(parseGames)
   .map(g => g.reduce((acc: Game, game: Game) => {
     acc.blue = Math.max(acc.blue, game.blue);

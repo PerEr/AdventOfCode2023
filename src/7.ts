@@ -32,7 +32,7 @@ const parseHandBid = (line: string, cards: string[]): HandBid => {
 
 
 const lookupMatch = (handBid: HandBid): number => {
-    const handMatchers = [
+    return [
         (handBid: HandBid) => {
             return handBid.cards[0].count == 5;
         }, 
@@ -54,8 +54,7 @@ const lookupMatch = (handBid: HandBid): number => {
         (handBid: HandBid) => {
             return true;
         },
-    ];
-    return handMatchers.findIndex(matcher => matcher(handBid));
+    ].findIndex(matcher => matcher(handBid));
 };
 
 const handBidComparator = (a: HandBid, b: HandBid, cards: string[]) => {
@@ -74,38 +73,38 @@ const handBidComparator = (a: HandBid, b: HandBid, cards: string[]) => {
     return lookupMatch(b) - lookupMatch(a) || cardCompare(a.hand, b.hand);
 };
 
-const cards1 = 'AKQJT98765432'.split('');
-const value1 = loadProblem("7.txt")
-    .map(line => parseHandBid(line, cards1))
-    .sort((a,b) => handBidComparator(a, b, cards1))
-    .map((handBid, ix) => handBid.bid*(ix+1))
-    .reduce((acc, val) => acc + val, 0);
+const part1 = (() => {
+    const cards = 'AKQJT98765432'.split('');
+    return loadProblem("7.txt")
+        .map(line => parseHandBid(line, cards))
+        .sort((a,b) => handBidComparator(a, b, cards))
+        .map((handBid, ix) => handBid.bid*(ix+1))
+        .reduce((acc, val) => acc + val, 0);
+})()
 
+console.log('Part1:', part1);
 
-console.log('Part1:', value1);
-
-const useJokers = (handBid: HandBid): HandBid => {
-    const jokerIndex = handBid.cards.findIndex(card => card.card == 'J');
-    if (jokerIndex == 0) {
-        if (handBid.cards.length > 1) {
-            const head = handBid.cards.shift() || { card: '', count: 0 };   
-            handBid.cards[0].count += head.count;
+const part2 = (() => {
+    const cards = 'AKQT98765432J'.split('');
+    const useJokers = (handBid: HandBid): HandBid => {
+        const jokerIndex = handBid.cards.findIndex(card => card.card == 'J');
+        if (jokerIndex == 0) {
+            if (handBid.cards.length > 1) {
+                const head = handBid.cards.shift() || { card: '', count: 0 };   
+                handBid.cards[0].count += head.count;
+            }
+        } else if (jokerIndex > 0) {
+            handBid.cards[0].count += handBid.cards[jokerIndex].count;
+            handBid.cards.splice(jokerIndex, 1);
         }
-    } else if (jokerIndex > 0) {
-        handBid.cards[0].count += handBid.cards[jokerIndex].count;
-        handBid.cards.splice(jokerIndex, 1);
+        return handBid;
     }
-    return handBid;
-}
+    return loadProblem("7.txt")
+        .map(line => parseHandBid(line, cards))
+        .map(useJokers)
+        .sort((a,b) => handBidComparator(a, b, cards))
+        .map((handBid, ix) => handBid.bid*(ix+1))
+        .reduce((acc, val) => acc + val, 0);
+})();
 
-
-const cards2 = 'AKQT98765432J'.split('');
-const value2 = loadProblem("7.txt")
-    .map(line => parseHandBid(line, cards2))
-    .map(useJokers)
-    .sort((a,b) => handBidComparator(a, b, cards2))
-    .map((handBid, ix) => handBid.bid*(ix+1))
-    .reduce((acc, val) => acc + val, 0);
-
-
-console.log('Part2:', value2);
+console.log('Part2:', part2);

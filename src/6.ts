@@ -30,8 +30,9 @@ const countWaysToWin = (r: Race) => {
     }
     return wins;
 };
+const part1 = races1.map(countWaysToWin).reduce((acc, val) => acc * val, 1);
 
-console.log('Part1:', races1.map(countWaysToWin).reduce((acc, val) => acc * val, 1));
+console.log('Part1:', part1);
 
 const race2 = ((): Race => {
     const [timestr, diststr] = loadProblem("6.txt");
@@ -43,5 +44,6 @@ const race2 = ((): Race => {
     
     return {time, distance};
 })();
+const part2 = countWaysToWin(race2);
 
-console.log('Part2:', countWaysToWin(race2));
+console.log('Part2:',part2);

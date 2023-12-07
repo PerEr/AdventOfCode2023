@@ -13,7 +13,6 @@ interface HandBid {
     cards: CardCount[];
 };
 
-
 const countCards = (hand: string, cards: string[]): CardCount[] => {
     var res: CardCount[] = [];
     cards.forEach(card => {
@@ -85,4 +84,28 @@ const value1 = loadProblem("7.txt")
 
 console.log('Part1:', value1);
 
+const useJokers = (handBid: HandBid): HandBid => {
+    const jokerIndex = handBid.cards.findIndex(card => card.card == 'J');
+    if (jokerIndex == 0) {
+        if (handBid.cards.length > 1) {
+            const head = handBid.cards.shift() || { card: '', count: 0 };   
+            handBid.cards[0].count += head.count;
+        }
+    } else if (jokerIndex > 0) {
+        handBid.cards[0].count += handBid.cards[jokerIndex].count;
+        handBid.cards.splice(jokerIndex, 1);
+    }
+    return handBid;
+}
 
+
+const cards2 = 'AKQT98765432J'.split('');
+const value2 = loadProblem("7.txt")
+    .map(line => parseHandBid(line, cards2))
+    .map(useJokers)
+    .sort((a,b) => handBidComparator(a, b, cards2))
+    .map((handBid, ix) => handBid.bid*(ix+1))
+    .reduce((acc, val) => acc + val, 0);
+
+
+console.log('Part2:', value2);

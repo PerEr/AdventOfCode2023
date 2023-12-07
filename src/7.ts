@@ -13,9 +13,8 @@ interface HandBid {
     cards: CardCount[];
 };
 
-const cards = 'AKQJT98765432'.split('');
 
-const countCards = (hand: string): CardCount[] => {
+const countCards = (hand: string, cards: string[]): CardCount[] => {
     var res: CardCount[] = [];
     cards.forEach(card => {
         const count = hand.split('').filter(c => c == card).length;
@@ -27,9 +26,9 @@ const countCards = (hand: string): CardCount[] => {
     return res;
 }
 
-const parseHandBid = (line: string): HandBid => {
+const parseHandBid = (line: string, cards: string[]): HandBid => {
     const p = line.split(" ");
-    return { hand: p[0], bid: +p[1], cards: countCards(p[0]) };
+    return { hand: p[0], bid: +p[1], cards: countCards(p[0], cards) };
 }
 
 
@@ -60,7 +59,7 @@ const lookupMatch = (handBid: HandBid): number => {
     return handMatchers.findIndex(matcher => matcher(handBid));
 };
 
-const handBidComparator = (a: HandBid, b: HandBid) => {
+const handBidComparator = (a: HandBid, b: HandBid, cards: string[]) => {
     const cardCompare = (a: string, b: string) => {
         while (a.length > 0 && b.length > 0) {
             const aix = cards.indexOf(a[0]);
@@ -76,9 +75,10 @@ const handBidComparator = (a: HandBid, b: HandBid) => {
     return lookupMatch(b) - lookupMatch(a) || cardCompare(a.hand, b.hand);
 };
 
+const cards1 = 'AKQJT98765432'.split('');
 const value1 = loadProblem("7.txt")
-    .map(parseHandBid)
-    .sort(handBidComparator)
+    .map(line => parseHandBid(line, cards1))
+    .sort((a,b) => handBidComparator(a, b, cards1))
     .map((handBid, ix) => handBid.bid*(ix+1))
     .reduce((acc, val) => acc + val, 0);
 

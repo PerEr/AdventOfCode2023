@@ -32,3 +32,20 @@ const steps = (() => {
 })();
 console.log('Part1:', steps);
 
+const steps2 = (() => {   
+    var currents = [...nodeMap.keys()].filter(k => k.endsWith('A'));
+    var steps = 0;
+    while(currents.find(c => !c.endsWith('Z'))) {
+        if (steps % 100000 == 0) {
+            console.log(currents, steps);
+        }
+        const lr = lrlist[steps % lrlist.length];
+        currents = currents.map(c => {
+            const current = nodeMap.get(c);
+            return lr == 'L' ? current!.left : current!.right;
+        });
+         ++steps
+    }
+    return steps;
+})();
+console.log('Part2:', steps2);

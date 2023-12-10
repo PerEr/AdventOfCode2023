@@ -1,5 +1,4 @@
 import { isDigit, loadProblem } from "./utils";
-
 // https://adventofcode.com/2023/day/8
 
 const lines = loadProblem("8.txt", "\n\n");
@@ -32,20 +31,30 @@ const steps = (() => {
 })();
 console.log('Part1:', steps);
 
-const steps2 = (() => {   
-    var currents = [...nodeMap.keys()].filter(k => k.endsWith('A'));
-    var steps = 0;
-    while(currents.find(c => !c.endsWith('Z'))) {
-        if (steps % 100000 == 0) {
-            console.log(currents, steps);
+const steplist2 = (() => {   
+    const findLoopCount = (key: string) => {
+        var steps = 0;
+        var current = nodeMap.get(key);
+        while(!current!.key.endsWith('Z')) {
+            const lr = lrlist[steps % lrlist.length];
+            current = lr == 'L' ? nodeMap.get(current!.left) : nodeMap.get(current!.right);
+             ++steps
         }
-        const lr = lrlist[steps % lrlist.length];
-        currents = currents.map(c => {
-            const current = nodeMap.get(c);
-            return lr == 'L' ? current!.left : current!.right;
-        });
-         ++steps
-    }
-    return steps;
+        return steps;
+    };
+    const nodes = [...nodeMap.keys()].filter(k => k.endsWith('A'));
+    return nodes.map(findLoopCount);
 })();
-console.log('Part2:', steps2);
+
+const lcm = (a: number, b: number): number => {
+    const gcd = (a: number, b: number): number => {
+        if (!b) {
+            return a;
+        }
+        
+        return gcd(b, a % b);
+    }
+    return (a * b) / gcd(a, b);
+}
+
+console.log('Part2:', steplist2.reduce((acc, val) => lcm(acc, val), steplist2[0]));

@@ -2,7 +2,7 @@ import { loadProblem } from "./utils";
 
 // https://adventofcode.com/2023/day/9
 
-const values1 = loadProblem("9.txt")
+const values = loadProblem("9.txt")
   .map(s => s.split(' ').map(n => +n));
 
 const diffList = (values: number[]): number[] => {
@@ -24,7 +24,7 @@ const processList = (res: number[][]): number[][] => {
     }
 }
 
-const predictNext = (values: number[]): number => {
+const predictNextTail = (values: number[]): number => {
     const lst = processList([values]).reverse();
     lst[0].push(0);
     for (var ix = 1; ix < lst.length; ix++) {
@@ -36,5 +36,19 @@ const predictNext = (values: number[]): number => {
     return lst[lst.length-1][lst[lst.length-1].length-1];
 }
 
-console.log('Part1:', values1.map(predictNext).reduce((a, b) => a + b, 0));
+console.log('Part1:', values.map(predictNextTail).reduce((a, b) => a + b, 0));
+
+const predictNextHead = (values: number[]): number => {
+    const lst = processList([values]).reverse();
+    lst[0].unshift(0);
+    for (var ix = 1; ix < lst.length; ix++) {
+        const first = lst[ix][0];
+        const delta = lst[ix-1][0];
+        lst[ix].unshift(first - delta);
+    }
+    
+    return lst[lst.length-1][0];
+}
+
+console.log('Part2:', values.map(predictNextHead).reduce((a, b) => a + b, 0));
 

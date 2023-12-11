@@ -1,4 +1,4 @@
-import { isDigit, loadProblem } from "./utils";
+import { loadProblem } from "./utils";
 // https://adventofcode.com/2023/day/8
 
 const lines = loadProblem("8.txt", "\n\n");
